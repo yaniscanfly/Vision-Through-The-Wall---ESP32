@@ -10,12 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          clean: true
 
-      - name: Fix permissions and clear caches
+      - name: Clean any stuck artifacts before build
         run: |
-          sudo chown -R $USER:$USER . || true
-          sudo chmod -R u+w . || true
+          sudo chmod -R 777 . || true
           sudo rm -rf managed_components build sdkconfig ~/.esp-idf-cache || true
 
       - name: Build ESP-IDF project
@@ -23,6 +24,11 @@ jobs:
         with:
           esp_idf_version: v5.5
           target: esp32
+
+      - name: Unlock permissions after build (CRITICAL FIX)
+        run: |
+          sudo chown -R $USER:$USER .
+          sudo chmod -R 777 .
 
       - name: Copy binaries to installer folder
         run: |
@@ -35,6 +41,5 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add web_installer/firmware/app.bin
           git commit -m "Auto-build firmware binaries" || exit 0
-          git clean -fd
           git pull --rebase origin main
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
