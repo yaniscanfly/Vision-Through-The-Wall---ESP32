@@ -15,7 +15,8 @@ jobs:
       - name: Fix permissions and clear caches
         run: |
           sudo chown -R $USER:$USER . || true
-          rm -rf managed_components build sdkconfig ~/.esp-idf-cache || true
+          sudo chmod -R u+w . || true
+          sudo rm -rf managed_components build sdkconfig ~/.esp-idf-cache || true
 
       - name: Build ESP-IDF project
         uses: espressif/esp-idf-ci-action@v1
