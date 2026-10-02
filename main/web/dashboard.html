@@ -1,0 +1,49 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yanis Vision CSI Radar</title><link rel="stylesheet" href="/theme.css">
+<style>
+#badge{display:block;text-align:center;padding:22px 12px;border-radius:14px;font-weight:900;font-size:clamp(15px,4.2vw,22px);letter-spacing:.14em;
+transition:all .25s}
+#badge.idle{color:var(--cyan);background:rgba(0,240,255,.08);border:2px solid var(--cyan);box-shadow:0 0 26px rgba(0,240,255,.6),inset 0 0 22px rgba(0,240,255,.15);text-shadow:0 0 12px var(--cyan)}
+#badge.alert{color:#fff;background:rgba(255,0,85,.28);border:2px solid var(--pink);animation:flash .55s infinite alternate;text-shadow:0 0 12px #fff}
+@keyframes flash{from{box-shadow:0 0 14px rgba(255,0,85,.4)}to{box-shadow:0 0 48px rgba(255,0,85,1),inset 0 0 30px rgba(255,0,85,.5)}}
+canvas{width:100%;height:240px;display:block}
+.row{display:flex;justify-content:space-between;color:var(--mut);font-size:11px;letter-spacing:.18em;margin-bottom:8px;text-transform:uppercase}
+.row b{color:var(--cyan)}
+#resetWifi{background:transparent;border:1px solid var(--purple);box-shadow:none;color:var(--mut);padding:9px 16px;font-size:11px}
+</style></head><body><div class="wrap">
+<h1>Yanis Vision CSI Radar</h1><div class="sub">Vision Through The Wall</div>
+<div class="card"><div id="badge" class="idle">NO MOTION DETECTED</div></div>
+<div class="card"><div class="row"><span>CSI variance amplitude</span><span>now <b id="val">0.000</b></span></div><canvas id="c"></canvas></div>
+<div style="text-align:center"><button id="resetWifi" onclick="resetWifi()">Reset Wi-Fi</button></div>
+<div class="foot">YANIS VISION // PRX-INSPIRED UI</div>
+</div>
+<script>
+const N=120,data=new Array(N).fill(0),cv=document.getElementById('c'),cx=cv.getContext('2d');
+const badge=document.getElementById('badge'),val=document.getElementById('val');
+function draw(){
+ const dpr=window.devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;cv.width=w*dpr;cv.height=h*dpr;cx.setTransform(dpr,0,0,dpr,0,0);
+ cx.clearRect(0,0,w,h);
+ const max=Math.max(1,...data)*1.15;
+ cx.strokeStyle='rgba(123,44,191,.28)';cx.lineWidth=1;
+ for(let i=1;i<5;i++){const y=h*i/5;cx.beginPath();cx.moveTo(0,y);cx.lineTo(w,y);cx.stroke();}
+ const pts=data.map((v,i)=>[i*w/(N-1),h-(v/max)*(h-8)-4]);
+ const g=cx.createLinearGradient(0,0,0,h);g.addColorStop(0,'rgba(255,0,85,.65)');g.addColorStop(1,'rgba(255,0,85,0)');
+ cx.beginPath();cx.moveTo(0,h);pts.forEach(p=>cx.lineTo(p[0],p[1]));cx.lineTo(w,h);cx.closePath();cx.fillStyle=g;cx.fill();
+ cx.beginPath();pts.forEach((p,i)=>i?cx.lineTo(p[0],p[1]):cx.moveTo(p[0],p[1]));
+ cx.strokeStyle='#ff0055';cx.lineWidth=2.5;cx.shadowColor='#ff0055';cx.shadowBlur=14;cx.stroke();cx.shadowBlur=0;
+}
+async function update(){
+ try{
+  const d=await (await fetch('/api/status',{cache:'no-store'})).json();
+  const v=Number(d.variance)||0;data.push(v);data.shift();val.textContent=v.toFixed(3);
+  if(d.motion){badge.className='alert';badge.textContent='MOTION DETECTED - WALL PENETRATION ACTIVE';}
+  else{badge.className='idle';badge.textContent='NO MOTION DETECTED';}
+  draw();
+ }catch(e){}
+}
+async function resetWifi(){
+ if(!confirm('Reset Wi-Fi settings? Yanis Vision will restart in setup mode (YanisVision-Setup).'))return;
+ try{await fetch('/api/reset-wifi',{method:'POST'});alert('Wi-Fi erased. Connect to YanisVision-Setup to configure a new network.');}catch(e){}
+}
+window.addEventListener('resize',draw);draw();setInterval(update,250);update();
+</script></body></html>

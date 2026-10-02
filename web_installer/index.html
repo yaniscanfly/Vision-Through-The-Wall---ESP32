@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yanis Vision Through The Wall - Web Installer</title>
+<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+<style>
+:root{--bg:#0b0813;--bg2:#130f24;--pink:#ff0055;--purple:#7b2cbf;--cyan:#00f0ff;--text:#f3eefc;--mut:#9a91b8}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:"Orbitron","Rajdhani","Segoe UI",system-ui,sans-serif;color:var(--text);padding:28px 16px 50px;
+background:radial-gradient(1000px 520px at 85% -10%,rgba(123,44,191,.45),transparent 60%),radial-gradient(800px 500px at -10% 110%,rgba(255,0,85,.28),transparent 60%),linear-gradient(160deg,var(--bg),var(--bg2));background-attachment:fixed}
+.wrap{max-width:820px;margin:0 auto}
+h1{font-size:clamp(20px,4.6vw,32px);letter-spacing:.1em;text-align:center;margin:8px 0 12px;text-transform:uppercase;
+background:linear-gradient(90deg,var(--pink),var(--purple) 55%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(255,0,85,.45))}
+.lead{text-align:center;color:var(--mut);line-height:1.6;max-width:640px;margin:0 auto 26px;font-size:15px}
+.card{background:rgba(19,15,36,.62);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(123,44,191,.55);border-radius:16px;padding:22px;margin-bottom:20px;
+box-shadow:0 0 0 1px rgba(255,0,85,.12),0 0 30px rgba(123,44,191,.35),inset 0 0 30px rgba(255,0,85,.05)}
+.install{text-align:center}
+esp-web-install-button button{font-family:inherit;cursor:pointer;border:0;border-radius:12px;padding:18px 40px;font-size:16px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#fff;
+background:linear-gradient(90deg,var(--pink),var(--purple));box-shadow:0 0 28px rgba(255,0,85,.65)}
+esp-web-install-button{--esp-tools-button-color:#ff0055;--esp-tools-button-text-color:#fff;--esp-tools-button-border-radius:12px}
+h2{font-size:14px;letter-spacing:.24em;color:var(--cyan);text-transform:uppercase;margin:0 0 14px}
+ol{margin:0;padding:0;list-style:none;counter-reset:s}
+li{counter-increment:s;display:flex;gap:14px;align-items:flex-start;padding:11px 0;border-bottom:1px solid rgba(123,44,191,.25);line-height:1.5;font-size:15px}
+li:last-child{border:0}
+li::before{content:counter(s);flex:0 0 30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--pink),var(--purple));box-shadow:0 0 14px rgba(255,0,85,.5)}
+code,.k{color:var(--cyan);font-weight:700}
+.warn{display:none;border:1px solid var(--pink);background:rgba(255,0,85,.12);border-radius:12px;padding:14px;margin-bottom:20px;text-align:center;box-shadow:0 0 22px rgba(255,0,85,.4)}
+.small{color:var(--mut);font-size:12px;line-height:1.6;margin-top:14px}
+.foot{text-align:center;color:var(--mut);font-size:11px;letter-spacing:.2em;margin-top:28px}
+</style></head>
+<body><div class="wrap">
+<h1>👉 INSTALL YANIS VISION THROUGH THE WALL ON YOUR ESP32</h1>
+<p class="lead">No ESP-IDF, VS Code, Python, or compilation required. Just connect your ESP32 to your computer with USB and install Yanis Vision directly from your browser.</p>
+
+<div class="warn" id="warn">⚠️ Web Serial is not available in this browser. Please use <b>Google Chrome</b> or <b>Microsoft Edge</b> on a desktop computer (over HTTPS or localhost).</div>
+
+<div class="card install">
+  <esp-web-install-button manifest="manifest.json">
+    <button slot="activate">⚡ Connect &amp; Install</button>
+    <span slot="unsupported">Use Chrome or Edge on desktop to install.</span>
+    <span slot="not-allowed">This page must be served over HTTPS or localhost.</span>
+  </esp-web-install-button>
+  <p class="small">Plug in your ESP32 with a data-capable USB cable, click the button, pick the serial port and confirm. If the port does not show up, hold the <span class="k">BOOT</span> button while connecting.</p>
+</div>
+
+<div class="card">
+  <h2>After installation</h2>
+  <ol>
+    <li><span>The ESP32 creates a Wi-Fi network called: <code>YanisVision-Setup</code></span></li>
+    <li><span>Connect using your phone or computer.</span></li>
+    <li><span>The setup portal opens automatically (Captive Portal). If it doesn't, browse to <code>http://192.168.4.1</code>.</span></li>
+    <li><span>Enter your Wi-Fi credentials.</span></li>
+    <li><span>Access the live dashboard at: <code>http://yanisvision.local</code></span></li>
+  </ol>
+</div>
+<div class="foot">YANIS VISION THROUGH THE WALL // CSI RADAR</div>
+</div>
+<script>if(!('serial' in navigator))document.getElementById('warn').style.display='block';</script>
+</body></html>

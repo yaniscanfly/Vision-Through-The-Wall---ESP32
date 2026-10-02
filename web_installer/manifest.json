@@ -1,0 +1,15 @@
+{
+  "name": "Yanis Vision Through The Wall",
+  "version": "1.0.0",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "firmware/bootloader.bin",      "offset": 4096 },
+        { "path": "firmware/partition-table.bin", "offset": 40960 },
+        { "path": "firmware/app.bin",             "offset": 131072 }
+      ]
+    }
+  ]
+}

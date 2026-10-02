@@ -1,0 +1,20 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yanis Vision Setup</title>
+<link rel="stylesheet" href="/theme.css">
+<style>
+input{width:100%;padding:15px;margin:8px 0;font-size:16px;font-family:inherit;color:var(--text);background:rgba(11,8,19,.8);
+border:1px solid var(--purple);border-radius:10px;outline:0}
+input:focus{border-color:var(--cyan);box-shadow:0 0 16px rgba(0,240,255,.5)}
+label{display:block;text-align:left;font-size:11px;letter-spacing:.2em;color:var(--cyan);margin-top:10px;text-transform:uppercase}
+.center{text-align:center}
+</style></head><body><div class="wrap">
+<h1>Yanis Vision</h1><div class="sub">Through The Wall &bull; Wi-Fi Setup</div>
+<div class="card">
+<p style="margin-top:0;color:var(--mut);font-size:14px;line-height:1.5">Connect your Yanis Vision sensor to your Wi-Fi network. After saving, the device restarts and the radar is available at <b style="color:var(--cyan)">http://yanisvision.local</b></p>
+<form method="POST" action="/save">
+<label>Wi-Fi Name</label><input name="ssid" placeholder="Network name (SSID)" autocapitalize="none" autocomplete="off" required>
+<label>Password</label><input name="password" type="password" placeholder="Wi-Fi password">
+<div class="center" style="margin-top:18px"><button type="submit">Connect</button></div>
+</form></div>
+<div class="foot">YANIS VISION // CSI RADAR</div>
+</div></body></html>
