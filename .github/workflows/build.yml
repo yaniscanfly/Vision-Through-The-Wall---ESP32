@@ -10,13 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          clean: true
+        uses: actions/checkout@v3
 
-      - name: Clean build artifacts and fix permissions
+      - name: Fix permissions and clear caches
         run: |
-          sudo rm -rf managed_components build sdkconfig sdkconfig.old || true
+          sudo chown -R $USER:$USER . || true
+          rm -rf managed_components build sdkconfig ~/.esp-idf-cache || true
 
       - name: Build ESP-IDF project
         uses: espressif/esp-idf-ci-action@v1
