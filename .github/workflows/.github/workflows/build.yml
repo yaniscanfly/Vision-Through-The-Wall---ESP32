@@ -1,0 +1,32 @@
+name: Build Yanis Vision firmware
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build ESP-IDF project
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v5.5
+          target: esp32
+
+      - name: Copy binaries to installer folder
+        run: |
+          mkdir -p web_installer/firmware
+          cp build/yanis_vision.bin web_installer/firmware/app.bin
+
+      - name: Commit and push binaries
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add web_installer/firmware/app.bin
+          git commit -m "Auto-build firmware binaries" || exit 0
+          git push
